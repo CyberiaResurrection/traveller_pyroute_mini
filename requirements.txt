@@ -1,0 +1,7 @@
+coverage[toml]
+mutmut @ git+https://github.com/boxed/mutmut.git@22f3924b6b5a2ff7916c1f62aa1ed1f3341e42ee
+pytest >= 8.0.0
+pytest-console-scripts
+pytest-randomly
+pytest-subtests
+typing_extensions
