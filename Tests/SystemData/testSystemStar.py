@@ -1,6 +1,6 @@
 import unittest
 
-from SystemData.SystemStar import SystemStar
+from PyRoute.SystemData.SystemStar import SystemStar
 
 
 class testSystemStar(unittest.TestCase):
