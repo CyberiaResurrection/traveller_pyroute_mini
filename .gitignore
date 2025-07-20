@@ -1,3 +1,7 @@
 mutants/
 .pytest_cache/
 venv/
+.coverage
+.idea/
+PyRoute/SystemData/__pycache__/
+Tests/SystemData/__pycache__/
