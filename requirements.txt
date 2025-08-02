@@ -1,5 +1,5 @@
 coverage[toml]
-mutmut == 3.3.0
+mutmut == 3.3.1
 pytest >= 8.0.0
 pytest-console-scripts
 pytest-randomly
