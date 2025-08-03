@@ -1,5 +1,8 @@
 coverage[toml]
+lark==1.1.8
 mutmut == 3.3.1
+networkx
+numpy == 1.26
 pytest >= 8.0.0
 pytest-console-scripts
 pytest-randomly
