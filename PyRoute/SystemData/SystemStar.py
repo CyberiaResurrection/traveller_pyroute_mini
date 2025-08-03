@@ -4,6 +4,7 @@ Created on Nov 23, 2023
 @author: CyberiaResurrection
 
 """
+from typing import Optional
 
 
 class SystemStar(object):
@@ -38,6 +39,23 @@ class SystemStar(object):
         if 'VII' == self.size:  # Reclassify archaic degenerate dwarfs as plain dwarfs
             self.size = 'D'
 
+    def __str__(self):
+        if self.spectral is None or self.digit is None:
+            return self.size
+        return self.spectral + str(self.digit) + ' ' + self.size
+
+    @property
+    def is_stellar(self) -> bool:
+        return self.size in SystemStar.starsizes
+
+    @property
+    def is_stellar_not_dwarf(self) -> bool:
+        return self.is_stellar and self.size != 'D'
+
+    @property
+    def is_supergiant(self) -> bool:
+        return self.size in SystemStar.supersizes
+
     def is_bigger(self, other) -> bool:
         if self.size != other.size:
             return SystemStar.sizes.index(self.size) < SystemStar.sizes.index(other.size)
@@ -50,3 +68,55 @@ class SystemStar(object):
         if self.digit != other.digit:
             return self.digit < other.digit
         return True
+
+    def canonicalise(self) -> None:
+        if self.is_stellar_not_dwarf and (self.spectral not in 'OBA' and self.size in ['Ia', 'Ib']):
+            self.size = 'II'
+
+        if 'D' == self.size and self.spectral is not None and self.digit is not None:
+            self.size = 'V'
+
+        if 'VI' == self.size and self.spectral in 'OBA':
+            self.size = 'V'
+
+        if 'VI' == self.size and 'F' == self.spectral and str(self.digit) in '01234':
+            self.size = 'V'
+
+        if 'IV' == self.size and 'M' == self.spectral:
+            self.size = 'V'
+
+        if 'IV' == self.size and 'K' == self.spectral and str(self.digit) in '56789':
+            self.size = 'V'
+
+
+    @property
+    def flux_choice(self) -> str:
+        if 'F' != self.spectral:
+            return self.spectral
+        else:
+            if int(self.digit) < 5:
+                return 'F0-4'
+            else:
+                return 'F5-9'
+
+    def check_canonical_size(self, max_flux, min_flux) -> Optional[str]:
+        choice = self.flux_choice
+        flux_line = SystemStar.star_fluxen[choice]
+        trim_line = {v for (k, v) in flux_line.items() if max_flux >= k >= min_flux}
+        msg = None
+        if self.size not in trim_line:
+            msg = "Flux values {} to {} only permit sizes {} of {} class star - not {}".format(min_flux, max_flux, ' '.join(trim_line), choice, self.size)
+
+        return msg
+
+    def fix_canonical_size(self, max_flux, min_flux) -> None:
+        choice = self.flux_choice
+        flux_line = SystemStar.star_fluxen[choice]
+        current_flux = [k for (k, v) in flux_line.items() if v == self.size]
+        if not current_flux:
+            current_flux = [-6]
+
+        if max(current_flux) < min_flux:
+            self.size = flux_line[min_flux]
+        elif min(current_flux) > max_flux:
+            self.size = flux_line[max_flux]
