@@ -113,7 +113,7 @@ class Galaxy(AreaItem):
         self.set_area_alg(star, sec.subsectors[star.subsector()], self.alg)
 
         star.tradeCode.sophont_list.append("{}A".format(self.alg[star.alg_code].population))
-        star.is_redzone = self.trade.unilateral_filter(star)
+        #star.is_redzone = self.trade.unilateral_filter(star)
         star.allegiance_base = self.alg[star.alg_base_code]
         star.is_well_formed()
         return star_counter + 1
