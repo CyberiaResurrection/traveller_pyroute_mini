@@ -1,12 +1,3 @@
-"""
-Created on Nov 23, 2023
-
-@author: CyberiaResurrection
-
-Along the lines of TradeCodes, pull all the system-star handling, checking, etc into one class that _just_ does system
-stars, rather than the multi-concern mashup that is the Star class
-
-"""
 import re
 from typing import Optional
 
@@ -49,10 +40,10 @@ class StarList(object):
         # Count C as a typoed V, given their adjacency on QWERTY keyboards
         stars_line = stars_line.replace(' IC', ' IV')
         stars_line = stars_line.replace(' C', ' V')
-        old_line = None
+        old_line = None # pragma: no mutate
         # Try to rumble missing star sizes, and iteratively fill them in
         counter = 0
-        while stars_line != old_line and counter < StarList.max_fill:
+        while stars_line != old_line and counter <= StarList.max_fill:
             old_line = stars_line  # pragma: no mutate
             twostars = StarList.two_stars_match.findall(stars_line)
             if twostars:
@@ -68,8 +59,7 @@ class StarList(object):
 
         self.stars_line = stars_line
         stars = StarList.stellar_match.findall(stars_line)
-        if not stars:
-            pass  # We used to disallow empty star lists, but real data said otherwise.
+        # We used to disallow empty star lists, but real data said otherwise.
         if 8 < len(stars):
             if trim_stars:
                 stars = stars[0:8]
