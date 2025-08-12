@@ -69,6 +69,31 @@ class SystemStar(object):
             return self.digit < other.digit
         return True
 
+    def check_canonical(self) -> tuple[bool, list[str]]:
+        msg = []
+
+        # Most of these checks are implied by the "Spectral Type And Size" table on p28 of T5.10 Book 3
+        if self.is_stellar_not_dwarf and (self.spectral not in 'OBA' and self.size in ['Ia', 'Ib']):
+            line = "Only OBA class stars can be supergiants (Ia/Ib), not " + str(self)
+            msg.append(line)
+        if 'D' == self.size and self.spectral is not None and self.digit is not None:
+            line = "D-size stars with non-empty spectral class _and_ spectral decimal should be V-size, not " + str(self)
+            msg.append(line)
+        if 'VI' == self.size and self.spectral in 'OBA':
+            line = "OBA class stars cannot be size VI, is " + str(self)
+            msg.append(line)
+        if 'VI' == self.size and 'F' == self.spectral and str(self.digit) in '01234':
+            line = "F0-F4 class stars cannot be size VI, is " + str(self)
+            msg.append(line)
+        if 'IV' == self.size and 'M' == self.spectral:
+            line = "M class stars cannot be size IV, is " + str(self)
+            msg.append(line)
+        if 'IV' == self.size and 'K' == self.spectral and str(self.digit) in '56789':
+            line = "K5-K9 class stars cannot be size IV, is " + str(self)
+            msg.append(line)
+
+        return 0 == len(msg), msg
+
     def canonicalise(self) -> None:
         if self.is_stellar_not_dwarf and (self.spectral not in 'OBA' and self.size in ['Ia', 'Ib']):
             self.size = 'II'

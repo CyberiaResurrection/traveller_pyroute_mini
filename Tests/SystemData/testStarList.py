@@ -107,6 +107,18 @@ class testStarList(unittest.TestCase):
         star_list.canonicalise()
         self.assertEqual("B2 Ia G5 V", str(star_list))
 
+    def test_check_canonical(self):
+        star_line = "G5 V B2 Ia"
+        star_list = StarList(star_line)
+        self.assertEqual(2, len(star_list.stars_list))
+
+        _, msg = star_list.check_canonical()
+        exp_msg = [
+            'Star 1 cannot be supergiant - is B2 Ia',
+            'Flux values 2 to 8 only permit sizes D IV V of B class star - not Ia'
+        ]
+        self.assertEqual(exp_msg, msg)
+
     def test_check_star_size_against_primary(self):
         star_line = "G5 V B2 Ia"
         star_list = StarList(star_line)
