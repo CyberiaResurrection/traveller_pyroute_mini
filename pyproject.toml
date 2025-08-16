@@ -6,5 +6,5 @@ source = ["PyRoute/"]
 paths_to_mutate = ["PyRoute/"]
 tests_dir = ["Tests/"]
 also_copy = ["Tests/", "pytest.ini"]
-runner = "pytest -x"
-max_stack_depth = 4
+runner = "pytest -x -p no:randomly -k testStarList"
+max_stack_depth = 8
